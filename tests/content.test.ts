@@ -5,7 +5,7 @@ import { inflateSync } from "node:zlib";
 import { describe, it } from "node:test";
 
 import { caseStudies, retrospective } from "../content/case-studies/index.ts";
-import { demos, experience, otherWork, profile } from "../content/site.ts";
+import { demos, profile } from "../content/site.ts";
 
 const root = join(import.meta.dirname, "..");
 const routes = new Set(["/", "/demo", "/demo/collaboration-graph", "/demo/idempotency", ...caseStudies.map((c) => `/work/${c.slug}`)]);
@@ -18,7 +18,7 @@ function strings(value: unknown): string[] {
   return [];
 }
 
-const allText = strings({ caseStudies, retrospective, experience, otherWork, profile, demos });
+const allText = strings({ caseStudies, retrospective, profile, demos });
 
 describe("content", () => {
   it("has case studies with unique slugs and section ids", () => {
@@ -28,6 +28,7 @@ describe("content", () => {
       const ids = study.sections.map((s) => s.id);
       assert.equal(new Set(ids).size, ids.length, `${study.slug} has duplicate section ids`);
       assert.ok(study.sections.every((s) => s.blocks.length > 0), `${study.slug} has an empty section`);
+      assert.ok(study.topics.length > 0, `${study.slug} has no topics`);
     }
   });
 
@@ -41,6 +42,10 @@ describe("content", () => {
     for (const text of allText) assert.doesNotMatch(text, pattern);
   });
 
+  it("never includes upstream institution identifiers from private code", () => {
+    for (const text of allText) assert.doesNotMatch(text, /\bI\d{6,}\b/);
+  });
+
   it("never includes a phone number", () => {
     const phone = /\(?\b\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}\b/;
     for (const text of allText) assert.doesNotMatch(text, phone);
@@ -48,7 +53,7 @@ describe("content", () => {
 
   it("links only to known internal routes and https URLs", () => {
     const links = allText.flatMap((t) => [...t.matchAll(/\]\(([^)]+)\)/g)].map((m) => m[1]));
-    links.push(...otherWork.map((w) => w.href), ...demos.map((d) => d.href), profile.github, profile.linkedin);
+    links.push(...demos.map((d) => d.href), profile.github, profile.linkedin, profile.impactDoc);
     assert.ok(links.length > 0);
     for (const href of links) {
       if (href.startsWith("/")) {

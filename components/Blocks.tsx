@@ -4,7 +4,6 @@ import { Inline } from "./Inline";
 
 const provenanceLabel: Record<Provenance, string> = {
   resume: "Resume",
-  "impact-doc": "Impact doc",
   "repo-docs": "Repo docs",
   code: "Verified in code",
 };

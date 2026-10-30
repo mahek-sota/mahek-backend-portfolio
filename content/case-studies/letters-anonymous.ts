@@ -4,11 +4,12 @@ export const lettersAnonymous: CaseStudy = {
   slug: "letters-anonymous",
   title: "Letters Anonymous: automated moderation that fails closed",
   summary:
-    "An anonymous wall of encouraging notes for students, moderated automatically on local models, with no human approval queue and no third-party services.",
+    "An anonymous wall of encouraging notes for students, moderated automatically on local models, with no human approval queue and no submission ever sent to a third party.",
   status: "Production",
   context: "University of Mississippi",
   role: "Built the platform end to end",
   period: "2025 – Present",
+  topics: ["Failing closed", "Local model inference", "Layered rate limits", "Responses that leak nothing"],
   stack: ["Node.js", "Express", "PostgreSQL", "React", "Transformers.js (local model)"],
   evidence: {
     label: "Verified against code",
@@ -111,7 +112,7 @@ CREATE INDEX letters_status_idx ON letters (status);`,
         {
           type: "facts",
           items: [
-            { value: "0", label: "third-party APIs: every submission is screened on local infrastructure", source: "impact-doc" },
+            { value: "0", label: "third parties that see a submission: the model is downloaded once, then runs in-process", source: "code" },
             { value: "0", label: "human approval steps on the submission path", source: "code" },
           ],
         },

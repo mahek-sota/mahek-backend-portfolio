@@ -15,7 +15,7 @@ const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variabl
 export const metadata: Metadata = {
   metadataBase: getSiteUrl(),
   title: {
-    default: `${profile.name} · Backend engineer`,
+    default: `${profile.name} · Engineering deep dives`,
     template: `%s · ${profile.name}`,
   },
   description: profile.description,
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: profile.name,
-    title: `${profile.name} · Backend engineer`,
+    title: `${profile.name} · Engineering deep dives`,
     description: profile.description,
     url: "/",
   },

@@ -15,6 +15,9 @@ export function SiteFooter() {
             <a href={profile.linkedin}>LinkedIn</a>
           </li>
           <li>
+            <a href={profile.impactDoc}>Impact document</a>
+          </li>
+          <li>
             <a href={profile.resumePath} download>
               Resume (PDF)
             </a>

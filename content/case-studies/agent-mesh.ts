@@ -11,6 +11,7 @@ export const agentMesh: CaseStudy = {
   context: "Public repository",
   role: "Sole author: design, implementation, tests and documentation",
   period: "2026",
+  topics: ["Run state machines", "Leases and fenced retries", "Postgres vs Redis Streams", "Live progress over SSE"],
   stack: ["Python", "FastAPI", "PostgreSQL + pgvector", "Redis Streams", "OpenTelemetry", "Prometheus", "Docker Compose"],
   evidence: {
     label: "Verified against code",

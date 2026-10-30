@@ -234,7 +234,6 @@ strong {
 /* Shared bits */
 
 .eyebrow,
-.aside-title,
 .toc-title,
 .work-meta,
 .code-label,
@@ -321,13 +320,11 @@ strong {
 
 @media (min-width: 960px) {
   .hero {
-    grid-template-columns: minmax(0, 1fr) 300px;
-    gap: 4rem;
     padding-top: 5rem;
   }
 }
 
-.hero-main > p:not(.lead):not(.eyebrow) {
+.hero > p:not(.lead):not(.eyebrow) {
   max-width: 40em;
   color: var(--muted);
 }
@@ -377,45 +374,6 @@ strong {
 
 .hero-links {
   font-size: 0.95rem;
-}
-
-.hero-aside {
-  border-top: 1px solid var(--rule);
-  padding-top: 1.25rem;
-}
-
-@media (min-width: 960px) {
-  .hero-aside {
-    border-top: none;
-    border-left: 1px solid var(--rule);
-    padding: 0.25rem 0 0 1.75rem;
-    align-self: start;
-    margin-top: 2.2rem;
-  }
-}
-
-.aside-title {
-  font-weight: 400;
-  margin: 0 0 1rem;
-}
-
-.focus {
-  margin: 0;
-}
-
-.focus div + div {
-  margin-top: 1rem;
-}
-
-.focus dt {
-  font-weight: 600;
-}
-
-.focus dd {
-  margin: 0.15rem 0 0;
-  color: var(--muted);
-  font-size: 0.95rem;
-  line-height: 1.5;
 }
 
 /* Home: work list */
@@ -469,6 +427,19 @@ strong {
   margin-bottom: 0.5rem;
 }
 
+.topics {
+  font-size: 0.92rem;
+}
+
+.topics-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-right: 0.35rem;
+}
+
 .work-meta {
   display: flex;
   flex-wrap: wrap;
@@ -499,80 +470,7 @@ strong {
   max-width: var(--measure);
 }
 
-/* Home: experience */
-
-.experience {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.experience > li {
-  margin-bottom: 2rem;
-  max-width: 52rem;
-}
-
-.experience-head {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 0.1rem 1.5rem;
-}
-
-.experience-head h3 {
-  margin: 0;
-  font-size: 1.15rem;
-}
-
-.org {
-  font-weight: 400;
-  color: var(--muted);
-}
-
-.period {
-  font-family: var(--font-mono);
-  font-size: 0.82rem;
-  color: var(--muted);
-  margin: 0;
-  white-space: nowrap;
-}
-
-.experience ul {
-  margin-top: 0.6rem;
-  max-width: var(--measure);
-}
-
-.education {
-  list-style: none;
-  padding: 0;
-  max-width: 52rem;
-}
-
-.education li {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 0 1.5rem;
-}
-
-.repo-list {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  gap: 1.5rem;
-  max-width: var(--measure);
-}
-
-.repo-name {
-  font-family: var(--font-mono);
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
-.repo-list p {
-  margin: 0.25rem 0 0;
-}
+/* Demo lists */
 
 .demo-list {
   list-style: none;

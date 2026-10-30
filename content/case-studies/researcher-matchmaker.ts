@@ -9,6 +9,7 @@ export const researcherMatchmaker: CaseStudy = {
   context: "University of Mississippi",
   role: "Built the prototype",
   period: "2025 – Present",
+  topics: ["Explainable scoring", "Testing invariants", "Zero-dependency Node"],
   stack: ["Node.js (no dependencies)", "Vanilla HTML/CSS/JS", "node:test"],
   evidence: {
     label: "Verified against code",
@@ -100,7 +101,7 @@ Content-Type: application/json
           items: [
             "Dummy data only. The weights are hand-chosen and haven't been validated against real team outcomes.",
             "No persistence or accounts. Queries are stateless.",
-            "Matching is a weighted sum over declared profile fields; it doesn't use publication data. Connecting it to the researcher data from the [discovery work](/work/research-discovery) would be the obvious next step.",
+            "Matching is a weighted sum over declared profile fields; it doesn't use publication data. Connecting it to the researcher data from the [researcher explorer](/work/researcher-explorer) would be the obvious next step.",
           ],
         },
       ],

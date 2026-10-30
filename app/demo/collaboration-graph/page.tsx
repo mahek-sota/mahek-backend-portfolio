@@ -26,9 +26,9 @@ export default function CollaborationGraphPage() {
           </p>
           <p>
             Every researcher, department and number here is fictional. The expansion rules mirror the production
-            researcher explorer behind the{" "}
-            <Link href="/work/research-discovery">research discovery case study</Link>; its code and data stay
-            private. This version runs entirely in your browser, with no server, network calls or concurrency.
+            researcher explorer described in{" "}
+            <Link href="/work/researcher-explorer">its deep dive</Link>; its code and data stay private. This
+            version runs entirely in your browser, with no server, network calls or concurrency.
           </p>
         </aside>
       </header>

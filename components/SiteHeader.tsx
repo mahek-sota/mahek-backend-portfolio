@@ -11,10 +11,7 @@ export function SiteHeader() {
         <nav aria-label="Primary">
           <ul>
             <li>
-              <Link href="/#work">Work</Link>
-            </li>
-            <li>
-              <Link href="/#experience">Experience</Link>
+              <Link href="/#work">Deep dives</Link>
             </li>
             <li>
               <Link href="/demo">Demos</Link>

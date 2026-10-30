@@ -4,10 +4,10 @@
 // Inline text in any `text`, list item or table cell supports a small markdown
 // subset: `code`, **bold** and [label](href).
 
-export type Status = "Production" | "Personal project" | "Prototype";
+export type Status = "Production" | "Internal tool" | "In development" | "Personal project" | "Prototype";
 
 /** Where a figure comes from. Shown next to outcomes so readers can weigh them. */
-export type Provenance = "resume" | "impact-doc" | "repo-docs" | "code";
+export type Provenance = "resume" | "repo-docs" | "code";
 
 export interface DiagramNode {
   label: string;
@@ -67,6 +67,8 @@ export interface CaseStudy {
   context: string;
   role: string;
   period: string;
+  /** What a reader will learn from this deep dive; shown on the home page. */
+  topics: string[];
   stack: string[];
   evidence: { label: string; text: string };
   sections: Section[];

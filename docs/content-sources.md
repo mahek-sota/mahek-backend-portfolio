@@ -22,23 +22,16 @@ Source keys:
 | LinkedIn https://www.linkedin.com/in/mahek-sota/ | R annotation (see discrepancy below) |
 | Phone number | **Not published** (user instruction); removed from the public PDF |
 
-## Home page
+## Scope (revised 2026-10-30)
 
-| Claim | Source |
-|---|---|
-| Software Engineer (Backend & AI), University of Mississippi, Jul 2024 – Present | R, I |
-| Applications supporting 10K+ students and 100+ faculty | R ("applications supporting"); I ("serving"). Kept R's wording; not a claim of active users |
-| Python/PostgreSQL/Kafka pipelines, 50M+ records, batching, delta sync, failure handling, observability, −30% ingestion latency | R; I |
-| Go services on AWS EKS, GitHub Actions CI/CD, centralized logging, JWT, Redis-backed rate limiting | R |
-| OpenAlex and Dimensions; subsecond search over ~6,900 researcher profiles | R ("6,900+"); I ("~6,900", "subsecond name search") |
-| Citation pipeline runs on local models, nothing leaves the institution | I |
-| Stealth startup internship details | R |
-| USC Course Producer details | R |
-| Ashtech internship: client-facing, accessible web and PayPal workflows, pytest and Jest | R |
-| Education (degrees, dates) | R; I |
-| modular-finance-tracking-system: NUMERIC(18,4), half-up rounding at boundaries, money as JSON strings | C (`app/core/money.py`, module models) |
-| go-task-manager-api: stdlib net/http, status codes 201/204/400/404/405 | C (`main.go`) |
-| openaq-kafka: one producer, four consumer services with their own group IDs | C (`backend/app/consumers/*`) |
+The site is now deep dives only, to be sent alongside the resume and impact
+document. Removed because they repeated those documents: the experience list,
+education, focus areas, the "other code" repo list, the home-page summary
+figures (50M+ records, −30%, 10K+ students), and the citation-verification
+case study (every claim came from the impact document). The research
+ingestion/discovery case study was replaced by a code-verified deep dive on the
+researcher explorer. The home page links to the resume and impact document
+(https://impact-doc.vercel.app/, supplied by the user) instead.
 
 ## agent-mesh (repo `mahek-sota/agent-ai-platform`, commit 47c1961)
 
@@ -68,33 +61,90 @@ R's "AI Agent Platform with MCP Integrations".
 | No idempotency key on POST /runs | C (no such handling in `api/runs.py`; grep for "idempot" finds only ingestion) |
 | "What I would change today": proposal | Present-day design assessment, framed as such on the page. Not implemented |
 
-## Research data ingestion and discovery (production, private code)
+## Researcher explorer (`~/Desktop/um-work/researcher-explorer`, private; sole committer)
 
 | Claim | Source |
 |---|---|
-| Owned pipeline lifecycle (requirements → monitoring); delta sync, real-time streaming | I |
-| 50M+ records, −30% latency | R, I |
-| OpenAlex, Dimensions | R |
-| Discovery explorer: co-authorship graph, name search, up to 3 hops, ~6,900, subsecond, weeks → minutes; FastAPI/React/TS/PostgreSQL/Docker | I; R |
-| Cross-school platform: 100K+ records, 5+ years, −25% query time | I |
-| 44.5K+ publications tracked | R; I (attributes to reporting dashboards; the page attributes it to reporting) |
-| Identity collisions, inconsistent identifiers; 4 methods, 3 identity sources, in progress | I |
-| Collaboration review tool framed as signal for human review | I |
-| Usage analytics used for renewals/cancellations | I; R ("evidence-based collection decisions") |
-| Conceptual diagram and many-to-many authorship relationship | Reconstruction, labelled as such |
+| Production; ~6,900 profiles; subsecond name search | R |
+| Period 2026 | C (first commit 2026-06-23, migration 2026-06-01) |
+| Importer: cursor paging, JSONL snapshot, single-writer batched upsert | C (`importer.py`), D |
+| Typed columns + raw JSONB; trigram name index; concepts/affiliations tables | C (migration 0001, `db_models.py`) |
+| `collaborators` cache, PK (author_id, collaborator_id) | C (`db_models.py`, migration) |
+| BFS per level with `asyncio.gather`; first-seen depth; edge = max count per unordered pair | C (`graph.py` `expand`) |
+| depth 0–3, max_per_node default 40 range 1–200; 404 / 502 | C (`routes/graph.py`, `config.py`) |
+| Raw pull top 200 before filtering | C (`_RAW_FETCH_CAP`) |
+| Links endpoint: sequential cache reads, semaphore-bounded fetches, sequential writes | C (`internal_links`) |
+| Merge rules (ORCID clusters, phantom exclusion, exact-first-name anchor union, single compatible anchor, summed works/citations, max h-index, 6 fetch members) | C (`merge.py`) |
+| Name-rule table | Fictional names; outcomes traced through `_name_compatible` by hand |
+| Read paths hide aliases / resolve canonical | C (`repository.py`, `routes/authors.py`) |
+| Pre-warm: exact crawl set, resumable, `--force`, failures skipped | C (`prewarm.py`) |
+| Limiter 8 rps default, 429: Retry-After else 2^n capped 60 s + ≤1 s jitter, shared pause with max() | C (`openalex.py`, `config.py`) |
+| `def` routes run in threadpool; pool 10 + 5 | C (`routes/authors.py`, `config.py`) |
+| What I'd change: no tests; empty results uncached; delete+insert PK race across workers → 502; expand blocks loop and has no semaphore; per-process limiter (acknowledged in config comment); merge map never reset (`reset_cache` unused) | C; present-day assessment |
+| Not published | Institution ID/name filter value, hostnames, Windows/IIS deployment, real names in merge examples |
 
-## Citation verification (production, private code)
+## Finance tracker (`mahek-sota/modular-finance-tracking-system`, public; 3 commits by the user)
 
 | Claim | Source |
 |---|---|
-| ~30 min manual review; naive approach produced confident hallucinations | I (reliable-ai) |
-| 30 → 2 min | R, I |
-| 10–30 faculty hours per semester | I |
-| No paid APIs, Ollama, on-prem corpus, reviewer trust as budget | I |
-| Seven stages | I (reliable-ai diagram) |
-| Six failure modes; per-slice evaluation | I |
-| ~12% routed to humans | I |
-| Verifier doubled latency; order of improvements | I |
+| Modules, unit of work in `get_session`, repositories only flush | C (`app/core/db.py`, `app/modules/*`) |
+| NUMERIC(18,4)/(18,8), CHAR(3), Decimal validation, `parse_float=Decimal` | C (migrations, schemas, `currency/rate_provider.py`) |
+| `quantize_money` half-up 2 dp, Money serialized as string | C (`app/core/money.py`) |
+| Version-keyed report cache, INCR on transaction writes and category delete, version 0 default | C (`app/core/cache.py`, `reporting/service.py`, `tracking/service.py`) |
+| Rate tiers, TTL 1 h latest / 7 d historical, 422/502 | C (`currency/service.py`, `rate_provider.py`) |
+| Budget half-open month, same-currency only, `spent > limit` | C (`budgets/service.py`) |
+| 46 tests (27 unit, 19 integration), savepoint isolation | C (grep `def test_`; `tests/conftest.py`). Not run (needs Postgres/Redis) |
+| What I'd change | Present-day assessment: bump before commit (README calls window sub-millisecond; entry persists to TTL), Redis errors fail writes, check-then-insert races, no CHECKs, PATCH null, weekend rate-date mismatch, float utilization, server-local month, unenforced module boundaries |
+| README overstatements not repeated | "never serve a stale report", full module independence |
+
+## DeFi tracker (`mahek-sota/defi-portfolio-tracker`, public)
+
+Page describes committed HEAD (`5fa43f0`) only. The local value-over-time chart service, its route and 6 integration tests are uncommitted, so they are not on the page.
+
+| Claim | Source |
+|---|---|
+| Four chains, static config upserted at boot, internal-transfer flag | C (`backend/src/config/chains.ts`, `src/db/chains.ts`) |
+| `Promise.allSettled` fan-out, per-chain DB transaction rollback | C (`src/services/ingest.ts`, `txIngest.ts`) |
+| withRetry 4 attempts, 250 ms base, 4 s cap, full jitter; price retry only network/429/5xx; receipts 8 at a time | C (`src/util/retry.ts`, `src/pricing/alchemyProvider.ts`, `src/chain/transactions.ts`) |
+| Redis 60 s → provider (batches of 25) → stale snapshot | C (`src/pricing/priceService.ts`) |
+| NUMERIC(78,0)/(38,18), BigInt formatting, decimals 0–36, decimal.js precision 80 | C (migration, `src/domain/amount.ts`, `usd.ts`) |
+| FIFO lots, proportional partial consumption, unknown cost → incomplete, 48 h price window, 50-token backfill cap | C (`src/domain/costBasis.ts`, `src/services/pnl.ts`) |
+| 73 tests at HEAD | C (count of `it(`/`test(` in committed test files); agent ran 79 in working tree, all passing |
+| Read-only, no signing code | C (grep of src and frontend) |
+| What I'd change | Present-day assessment: totals include incomplete tokens (contradicts README), oversell realizes unmatched proceeds, sync in request with no timeouts, last_synced_block unused, gas only for value transfers, self-transfers, bridges |
+| **Not published, tell user** | ethers error messages can include the RPC URL with the API key, which `withRetry` copies into API responses; no auth on delete/list endpoints; `rejectUnauthorized:false` for production DB TLS |
+
+## Research ingestion collector (`~/Desktop/um-work/um-research-dashboard/data_collection_server`, private, uncommitted)
+
+| Claim | Source |
+|---|---|
+| Entity types and sources | C (`extract.py`, `collector/*`) |
+| Old Dimensions client fetched one 1,000-record page | C (docstring `collector/dimensions.py`); R2 `dimensions_client.py` |
+| Task state, skip-if-fresh, resume running/failed, advisory lock | C (`collector/db.py`, `extract.py`) |
+| Page upsert + checkpoint one transaction; ON CONFLICT upserts; authorship dedup per page | C (`collector/db.py`, `collector/openalex.py`) |
+| Keyset paging and no-advance guard | C (`collector/dimensions.py`) |
+| Completeness: expected from API, distinct rows by `last_seen_at`, 1% tolerance, exit 1 | C (`collector/db.py`, `extract.py`) |
+| Skip paging 76% / 95%, keyset 100% | Run logs (25,486 and 31,832 of 33,675; then 33,675). Absolute counts not published |
+| HTTP throttle 0.15 s / 2.1 s, 8 attempts, 5 s backoff doubling capped 300 s, +0–20% jitter, Retry-After floor | C (`collector/http.py`, `openalex.py`, `dimensions.py`) |
+| Error-in-200, token refresh, heavy-field split retry, ≥100-author refetch | C (`collector/dimensions.py`, `openalex.py`) |
+| Daily timer ±15 min, `--skip-if-fresh 160` | C (`deploy/um-extract.timer`, `um-extract.service`) |
+| Status "In development" | Collector uncommitted; logs only from 2026-10-28/29, run locally |
+| What I'd change | Present-day assessment: incomplete run resumes at end and fails again, tolerance invisible, aggregates rebuild after failures, no alerting, no stale-row retirement, no tests, API key in query string |
+| Not published | Institution OpenAlex/GRID/ROR IDs, hostnames, `/opt` paths, service users, absolute counts, real author IDs |
+| v2 (`um-research-info-dashboard`) | Not described: its checkpoints are never read and its "minutes–<1h" claim has no evidence |
+
+## um-work additions (2026-10-30)
+
+All private; behavior only. No names, hostnames, credentials, vendor figures or institution IDs published.
+
+| Page | Source | Key verified claims | Not published |
+|---|---|---|---|
+| `catalog-api-console` | `~/Desktop/um-work/sierra-ui` (not a git repo) | Proxy route, zod server-only config, single-flight token with 60 s skew, one 401 retry, write gate treating `POST */query` as read, LPATRON stripping, per-endpoint timeouts, 404/107 → empty, id-cursor fetch-all capped at 50 pages, query-builder join placement, mock mode; **174 tests run, all passing** | Sierra hostname (`recording.md`, `docs/ENDPOINTS.md`), credentials in `.env.local`, record IDs in docs, key's role list |
+| `lcsh-explorer` | `~/Desktop/um-work/keyword-recomender/v2` | Live id.loc.gov suggest, scoring 100/92/fuzzy, fallback A→B→C→D→local→semantic (<80), semantic proposals re-validated (accept ≥0.60), lazy optional model, 12-way fan-out under 20 s budget with plan-order reassembly, L1 24 h / L2 6 h / L3 1 h caches below ranking, NSSM + nginx, single worker | Docx/xlsx author metadata; README fallback order is wrong (code order used); "97%" claims omitted |
+| `faculty-profiles` | `~/Desktop/um-work/faculty-data` (method1–5) | ORCID spine, affiliation-gated discovery, matched-author check for search candidates, source weights (`config.py`), Dimensions 69/150 & 32 single-paper (code comment), 194 unrelated papers (code comment), rarity band 20–300,000, depth × rarity, rank-interleaved budget, constrained LLM, 30 s Retry-After cap | All names/ORCIDs/outputs; **method3 has committed Scopus and Semantic Scholar keys in a public repo** |
+| `collection-decisions` | `collection-usage-dashboard`, `collection-value`, `ill-acquisition-on-demand` | Content-based report detection, encodings, two-pass selection and month ownership, 417/417 and 6,824/6,848 (TESTING_NOTES.md), weights/bands/overrides (`config.yaml`), bounded Rule of Five, ISSN union-find, gzip+base64 single HTML; **41 + 39 tests run, all passing** | Vendor names, usage, invoices, royalty figures, staff names, personal email in `config.yaml` |
+| HalluCheck | `~/Desktop/um-work/HalluCheck` | **Not published.** DOI verification can never succeed (author field bug), outages read as hallucinations, no tests; committed Semantic Scholar key and Google API key in history; named people's documents in history | Everything |
+| university-collab-risk | — | Not published: sensitive subject (country-based review list); user to decide | — |
 
 ## Demos
 
@@ -130,7 +180,8 @@ Both are illustrative and labelled on the page.
 
 | Claim | Source |
 |---|---|
-| Production, 2025 – present, zero third-party APIs | I |
+| Production, 2025 – present | I |
+| No third party sees a submission; model downloaded once from Hugging Face, inference in-process | C (`package.json`, `moderation.js`), D (README) |
 | Two-stage moderation, waits for model, rejects on inference error | C (`moderation.js`) |
 | Handler-level catch rejects | C (`server.js`) |
 | Model never loads → rules-only approval, reported in health | C (`moderation.js` `initModeration`, `moderationStatus`) |

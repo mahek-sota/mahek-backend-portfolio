@@ -9,6 +9,7 @@ export const carePlatform: CaseStudy = {
   context: "Private repository",
   role: "Sole author",
   period: "2026",
+  topics: ["Object-level authorization", "Refresh-token rotation", "Audit events in the same transaction", "Typo-tolerant search"],
   stack: ["Python", "FastAPI", "PostgreSQL", "SQLAlchemy 2.0", "Alembic", "React", "TypeScript"],
   evidence: {
     label: "Verified against code",

@@ -1,7 +1,10 @@
 # Mahek Sota — backend engineering portfolio
 
-A small Next.js site: a home page, six case studies, and two illustrative
-demos (a co-authorship graph explorer and idempotent transaction handling). Every page is statically rendered.
+A small Next.js site of engineering deep dives: twelve project write-ups and two
+illustrative demos (a co-authorship graph explorer and idempotent transaction
+handling). It's meant to be sent alongside the resume and the impact document,
+so it leaves out roles, dates and results that those already cover and links to
+them instead. Every page is statically rendered.
 There is no database, authentication, analytics or contact form.
 
 ## Local setup
@@ -47,7 +50,7 @@ Content is plain TypeScript data, separate from the pages that render it.
 
 | What | Where |
 |---|---|
-| Name, email, profile links, focus areas, experience, education, smaller repos | `content/site.ts` |
+| Name, email, profile links (including the impact document), demo list | `content/site.ts` |
 | Case studies (one file each) | `content/case-studies/*.ts` |
 | Case study order and the retrospective callout on the home page | `content/case-studies/index.ts` |
 | Content types (sections and block kinds) | `content/types.ts` |
@@ -67,12 +70,13 @@ Each case study is a list of sections; each section is a list of blocks:
 - `diagram` — a vertical flow of rows of nodes with labelled connectors. It
   reflows to any width. Always say in `provenance` how the diagram was made.
 - `note` — `evidence`, `illustrative` or `proposal` callouts.
-- `facts` — outcome figures. Each needs a `source` (`resume`, `impact-doc`,
+- `facts` — outcome figures. Each needs a `source` (`resume`,
   `repo-docs` or `code`), which is shown next to the number.
 
 Set `feature: true` on a section to give it the emphasized retrospective
 style. To add a case study, create a file in `content/case-studies/`, add it
-to the array in `index.ts`, and it gets a page, a home-page entry and a
+to the array in `index.ts`, give it a few `topics` (shown as "Covers" on the
+home page), and it gets a page, a home-page entry and a
 sitemap entry. Order in that array is the order on the home page; the first
 one is linked as the strongest case study.
 

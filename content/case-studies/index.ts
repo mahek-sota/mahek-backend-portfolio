@@ -1,18 +1,30 @@
 import type { CaseStudy } from "../types.ts";
 import { agentMesh } from "./agent-mesh.ts";
 import { carePlatform } from "./care-platform.ts";
-import { citationVerification } from "./citation-verification.ts";
+import { catalogApiConsole } from "./catalog-api-console.ts";
+import { collectionDecisions } from "./collection-decisions.ts";
+import { defiTracker } from "./defi-tracker.ts";
+import { facultyProfiles } from "./faculty-profiles.ts";
+import { financeTracker } from "./finance-tracker.ts";
+import { lcshExplorer } from "./lcsh-explorer.ts";
 import { lettersAnonymous } from "./letters-anonymous.ts";
-import { researchDiscovery } from "./research-discovery.ts";
+import { researchIngestion } from "./research-ingestion.ts";
+import { researcherExplorer } from "./researcher-explorer.ts";
 import { researcherMatchmaker } from "./researcher-matchmaker.ts";
 
-/** Display order on the home page. The first entry is the featured case study. */
+/** Display order on the home page. The first entry is the featured deep dive. */
 export const caseStudies: CaseStudy[] = [
   agentMesh,
-  researchDiscovery,
+  researchIngestion,
+  researcherExplorer,
+  catalogApiConsole,
+  financeTracker,
+  facultyProfiles,
+  collectionDecisions,
   carePlatform,
   lettersAnonymous,
-  citationVerification,
+  defiTracker,
+  lcshExplorer,
   researcherMatchmaker,
 ];
 

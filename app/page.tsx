@@ -1,8 +1,7 @@
 import Link from "next/link";
 
-import { Inline } from "@/components/Inline";
 import { caseStudies, retrospective } from "@/content/case-studies";
-import { demos, education, experience, focusAreas, otherWork, profile } from "@/content/site";
+import { demos, profile } from "@/content/site";
 
 export default function HomePage() {
   const [featured] = caseStudies;
@@ -10,64 +9,47 @@ export default function HomePage() {
   return (
     <div className="page">
       <section className="hero" aria-labelledby="intro-title">
-        <div className="hero-main">
-          <p className="eyebrow">Backend engineer · University of Mississippi</p>
-          <h1 id="intro-title">{profile.name}</h1>
-          <p className="lead">
-            I build the backend systems behind research discovery and reporting at the University of Mississippi:
-            pipelines that have processed 50M+ records, search across about 6,900 researcher profiles, and a
-            citation-verification pipeline that runs entirely on local models so nothing leaves the institution.
-          </p>
-          <p>
-            Most of my attention goes to the parts that decide whether a system can be trusted: explicit state,
-            retries that can&apos;t apply twice, permissions enforced at the boundary, and enough telemetry to explain
-            a bad run after the fact.
-          </p>
+        <p className="eyebrow">Engineering deep dives · Backend</p>
+        <h1 id="intro-title">{profile.name}</h1>
+        <p className="lead">
+          Systems I&apos;ve built, each taken apart in detail: the data model, how requests flow, where it can
+          fail, the trade-offs I made and, for the larger ones, what I would change now.
+        </p>
+        <p>
+          This site is for the technical detail behind my work. For roles, dates and results, see my{" "}
+          <a href={profile.resumePath}>resume</a> and <a href={profile.impactDoc}>impact document</a>. Every page
+          says where its facts come from, and simplified or fictional examples are labelled.
+        </p>
 
-          <Link className="start-here" href={`/work/${featured.slug}`}>
-            <span className="start-here-label">Start with the strongest case study</span>
-            <span className="start-here-title">{featured.title}</span>
-            <span className="start-here-meta">
-              Durable runs, leases and fenced retries in Postgres, including what I would change today →
-            </span>
-          </Link>
+        <Link className="start-here" href={`/work/${featured.slug}`}>
+          <span className="start-here-label">If you read one</span>
+          <span className="start-here-title">{featured.title}</span>
+          <span className="start-here-meta">
+            Durable runs, leases and fenced retries in Postgres, including what I would change today →
+          </span>
+        </Link>
 
-          <ul className="link-row hero-links" aria-label="Contact and profiles">
-            <li>
-              <a href={profile.resumePath} download>
-                Resume (PDF)
-              </a>
-            </li>
-            <li>
-              <a href={profile.github}>GitHub</a>
-            </li>
-            <li>
-              <a href={profile.linkedin}>LinkedIn</a>
-            </li>
-            <li>
-              <a href={`mailto:${profile.email}`}>{profile.email}</a>
-            </li>
-          </ul>
-        </div>
-
-        <aside className="hero-aside" aria-labelledby="focus-title">
-          <h2 id="focus-title" className="aside-title">
-            Problems I work on
-          </h2>
-          <dl className="focus">
-            {focusAreas.map((area) => (
-              <div key={area.title}>
-                <dt>{area.title}</dt>
-                <dd>{area.text}</dd>
-              </div>
-            ))}
-          </dl>
-        </aside>
+        <ul className="link-row hero-links" aria-label="Contact and profiles">
+          <li>
+            <a href={`mailto:${profile.email}`}>{profile.email}</a>
+          </li>
+          <li>
+            <a href={profile.github}>GitHub</a>
+          </li>
+          <li>
+            <a href={profile.linkedin}>LinkedIn</a>
+          </li>
+          <li>
+            <a href={profile.resumePath} download>
+              Resume (PDF)
+            </a>
+          </li>
+        </ul>
       </section>
 
       <section id="work" className="section" aria-labelledby="work-title">
         <h2 id="work-title" className="section-title">
-          Selected work
+          Deep dives
         </h2>
         <ol className="work-list">
           {caseStudies.map((study, i) => (
@@ -85,6 +67,9 @@ export default function HomePage() {
                   <Link href={`/work/${study.slug}`}>{study.title}</Link>
                 </h3>
                 <p>{study.summary}</p>
+                <p className="topics">
+                  <span className="topics-label">Covers</span> {study.topics.join(" · ")}
+                </p>
                 <p className="stack">{study.stack.join(" · ")}</p>
               </div>
             </li>
@@ -101,61 +86,6 @@ export default function HomePage() {
             Read the retrospective →
           </Link>
         </div>
-      </section>
-
-      <section id="experience" className="section" aria-labelledby="experience-title">
-        <h2 id="experience-title" className="section-title">
-          Experience
-        </h2>
-        <ol className="experience">
-          {experience.map((item) => (
-            <li key={`${item.org}-${item.period}`}>
-              <div className="experience-head">
-                <h3>
-                  {item.title}, <span className="org">{item.org}</span>
-                </h3>
-                <p className="period">{item.period}</p>
-              </div>
-              <ul>
-                {item.points.map((point) => (
-                  <li key={point}>
-                    <Inline text={point} />
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ol>
-        <h3 className="subhead">Education</h3>
-        <ul className="education">
-          {education.map((item) => (
-            <li key={item.school}>
-              <span>
-                {item.degree}, {item.school}
-              </span>
-              <span className="period">{item.period}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="section" aria-labelledby="code-title">
-        <h2 id="code-title" className="section-title">
-          Other code you can read
-        </h2>
-        <p className="section-intro">Smaller personal and learning projects, described only from what their code shows.</p>
-        <ul className="repo-list">
-          {otherWork.map((repo) => (
-            <li key={repo.name}>
-              <a href={repo.href} className="repo-name">
-                {repo.name}
-              </a>
-              <p>
-                <Inline text={repo.text} />
-              </p>
-            </li>
-          ))}
-        </ul>
       </section>
 
       <section className="section" aria-labelledby="demo-title">
